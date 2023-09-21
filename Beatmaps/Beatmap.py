@@ -1,4 +1,4 @@
-from pyosu.Beatmaps.Sections import GeneralSection, EditorSection, MetadataSection, DifficultySection, EventsSection
+from pyosu.Beatmaps.Sections import GeneralSection, EditorSection, MetadataSection, DifficultySection, EventsSection, ColorsSection
 
 # Beatmap class implementation heavily inspired from https://github.com/mrflashstudio/OsuParsers
 class Beatmap:
@@ -11,4 +11,5 @@ class Beatmap:
         self.MetadataSection = MetadataSection.MetadataSection()
         self.DifficultySection = DifficultySection.DifficultySection()
         self.EventsSection = EventsSection.EventsSection()
+        self.ColorsSection = ColorsSection.ColorsSection()
         
