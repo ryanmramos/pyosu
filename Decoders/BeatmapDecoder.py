@@ -1,6 +1,7 @@
 import os, sys
 from Beatmaps import Beatmap
 from Enums.FileSections import FileSections
+from Helpers.ParseHelper import ParseHelper
 
 class BeatmapDecoder():
     def __init__(self):
@@ -25,5 +26,7 @@ class BeatmapDecoder():
         self.currentSection = FileSections.Format
         
         for line in f:
-            print(line, end="")
+            if (line and not line.isspace()) and (not line.startswith("//")):
+                ParseHelper.GetCurrentSection(None, line)
+                
         
