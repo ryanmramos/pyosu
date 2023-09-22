@@ -1,4 +1,6 @@
-class SampleSet(enumerate):
-    Normal = 1,
-    Soft = 2,
+from enum import Enum
+
+class SampleSet(Enum):
+    Normal = 1
+    Soft = 2
     Drum = 3
