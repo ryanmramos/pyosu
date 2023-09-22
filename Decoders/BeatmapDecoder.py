@@ -27,6 +27,33 @@ class BeatmapDecoder():
         
         for line in f:
             if (line and not line.isspace()) and (not line.startswith("//")):
-                ParseHelper.GetCurrentSection(None, line)
-                
+                if ParseHelper.GetCurrentSection(None, line) != FileSections.none:
+                    self.currentSection = ParseHelper.GetCurrentSection(None, line)
+                elif ParseHelper.IsLineValid(None, line, self.currentSection):
+                    self.ParseLine(line)
+                    
+    def ParseLine(self, line):
+        # pass on a case means that it's not a priority for me as of right now
+        # and will be implemented later :)
+        if self.currentSection == FileSections.Format:
+            pass
+        elif self.currentSection == FileSections.General:
+            pass
+        elif self.currentSection == FileSections.Editor:
+            pass
+        elif self.curretnSection == FileSections.Metadata:
+            pass
+        elif self.currentSection == FileSections.Difficulty:
+            pass
+        elif self.currentSection == FileSections.Events:
+            pass
+        elif self.currentSection == FileSections.TimingPoints:
+            pass
+        elif self.currentSection == FileSections.Colors:
+            pass
+        elif self.currentSection == FileSections.HitObjects:
+            self.ParseHitObject(line)
+            
+    def ParseHitObject(self, line):
+        pass
         
