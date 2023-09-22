@@ -1,6 +1,7 @@
-from pyosu.Beatmaps.Sections import GeneralSection, EditorSection, MetadataSection, DifficultySection, EventsSection, ColorsSection
+from Beatmaps.Sections import *
 
 # Beatmap class implementation heavily inspired from https://github.com/mrflashstudio/OsuParsers
+
 class Beatmap:
     LATEST_OSZ_VERSION = 14
     

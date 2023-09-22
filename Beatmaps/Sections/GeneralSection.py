@@ -1,5 +1,7 @@
-from pyosu.Enums.Beatmaps.SampleSet import SampleSet
-from pyosu.Enums.Ruleset import Ruleset
+# from pyosu.Enums.Beatmaps.SampleSet import SampleSet
+# from pyosu.Enums.Ruleset import Ruleset
+from Enums.Beatmaps.SampleSet import SampleSet
+from Enums.Ruleset import Ruleset
 
 class GeneralSection():
     def __init__(self):
