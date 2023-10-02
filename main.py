@@ -5,11 +5,6 @@ from Decoders.BeatmapDecoder import BeatmapDecoder
 
 OSU_PATH = os.path.join(os.getenv("LOCALAPPDATA"), "osu!")
 
-class Color(enumerate):
-    RED = 1,
-    GREEN = 2,
-    BLUE = 3
-
 def main():
     filename = fd.askopenfilename(initialdir=os.path.join(OSU_PATH, "Songs"),
                                   filetypes=[("*", ".osu")])

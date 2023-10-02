@@ -9,7 +9,7 @@ class FileSections(Enum):
     Difficulty = 5
     Events = 6
     TimingPoints = 7
-    Colors = 8
+    Colours = 8
     HitObjects = 9
     Fonts = 10
     CatchTheBeat = 11

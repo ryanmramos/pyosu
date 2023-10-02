@@ -18,7 +18,7 @@ class ParseHelper():
             return line.find(':') > 0
         elif currentSection == FileSections.Events or currentSection == FileSections.TimingPoints or currentSection == FileSections.HitObjects:
             return line.find(',') > 0
-        elif currentSection == FileSections.Colors or currentSection == FileSections.CatchTheBeat:
+        elif currentSection == FileSections.Colours or currentSection == FileSections.CatchTheBeat:
             return line.find(',') > 0 and line.find(':') > 0
         else:
             return False

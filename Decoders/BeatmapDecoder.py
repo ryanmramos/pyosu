@@ -1,6 +1,8 @@
 import os, sys
 from Beatmaps import Beatmap
 from Enums.FileSections import FileSections
+from Enums.Beatmaps.HitObjectType import HitObjectType
+from Enums.Beatmaps.HitSoundType import HitSoundType
 from Helpers.ParseHelper import ParseHelper
 
 class BeatmapDecoder():
@@ -41,7 +43,7 @@ class BeatmapDecoder():
             pass
         elif self.currentSection == FileSections.Editor:
             pass
-        elif self.curretnSection == FileSections.Metadata:
+        elif self.currentSection == FileSections.Metadata:
             pass
         elif self.currentSection == FileSections.Difficulty:
             pass
@@ -49,11 +51,30 @@ class BeatmapDecoder():
             pass
         elif self.currentSection == FileSections.TimingPoints:
             pass
-        elif self.currentSection == FileSections.Colors:
+        elif self.currentSection == FileSections.Colours:
             pass
         elif self.currentSection == FileSections.HitObjects:
             self.ParseHitObject(line)
             
     def ParseHitObject(self, line):
-        pass
+        # Hit object syntax: x,y,time,type,hitSound,objectParams,hitSample
+        tokens = line.split(',')
+        
+        position = [int(tokens[0]), int(tokens[1])]
+        
+        startTime = int(tokens[2])  # in ms
+        
+        type = int(tokens[3])
+        
+        comboOffset = (type & HitObjectType.ComboOffset.value) >> 4
+        type &= ~HitObjectType.ComboOffset.value
+        
+        isNewCombo = True if (type & HitObjectType.NewCombo.value) > 0 else False
+        type &= ~HitObjectType.NewCombo.value
+        
+        hitSound = int(tokens[4])
+        
+        extrasSplit = tokens[-1].split(':')
+        extraOffset = type & HitObjectType.Hold.value
+        # continue here
         
