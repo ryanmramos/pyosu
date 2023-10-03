@@ -1,16 +1,18 @@
 import os, sys
 from Beatmaps.Beatmap import Beatmap
+from Beatmaps.Objects.HitCircle import HitCircle
 from Enums.FileSections import FileSections
 from Enums.Beatmaps.HitObjectType import HitObjectType
 from Enums.Beatmaps.HitSoundType import HitSoundType
 from Enums.Beatmaps.SampleSet import SampleSet
+from Enums.Ruleset import Ruleset
 from Helpers.ParseHelper import ParseHelper
 from Beatmaps.Objects import Extras
 
 class BeatmapDecoder():
     def __init__(self):
-        self.beatmap = None
-        self.currentSection = FileSections.none
+        self.Beatmap = None
+        self.CurrentSection = FileSections.none
         
     def decode(self, path):
         
@@ -26,36 +28,36 @@ class BeatmapDecoder():
         except IOError:
             print(f"(-) Error: Could not open file '{path}' as the input file.", file=sys.stderr)
         
-        self.beatmap = Beatmap()
-        self.currentSection = FileSections.Format
+        self.Beatmap = Beatmap()
+        self.CurrentSection = FileSections.Format
         
         for line in f:
             if (line and not line.isspace()) and (not line.startswith("//")):
                 if ParseHelper.GetCurrentSection(None, line) != FileSections.none:
-                    self.currentSection = ParseHelper.GetCurrentSection(None, line)
-                elif ParseHelper.IsLineValid(None, line, self.currentSection):
+                    self.CurrentSection = ParseHelper.GetCurrentSection(None, line)
+                elif ParseHelper.IsLineValid(None, line, self.CurrentSection):
                     self.ParseLine(line)
                     
     def ParseLine(self, line):
         # pass on a case means that it's not a priority for me as of right now
         # and will be implemented later :)
-        if self.currentSection == FileSections.Format:
+        if self.CurrentSection == FileSections.Format:
             pass
-        elif self.currentSection == FileSections.General:
+        elif self.CurrentSection == FileSections.General:
             pass
-        elif self.currentSection == FileSections.Editor:
+        elif self.CurrentSection == FileSections.Editor:
             pass
-        elif self.currentSection == FileSections.Metadata:
+        elif self.CurrentSection == FileSections.Metadata:
             pass
-        elif self.currentSection == FileSections.Difficulty:
+        elif self.CurrentSection == FileSections.Difficulty:
             pass
-        elif self.currentSection == FileSections.Events:
+        elif self.CurrentSection == FileSections.Events:
             pass
-        elif self.currentSection == FileSections.TimingPoints:
+        elif self.CurrentSection == FileSections.TimingPoints:
             pass
-        elif self.currentSection == FileSections.Colours:
+        elif self.CurrentSection == FileSections.Colours:
             pass
-        elif self.currentSection == FileSections.HitObjects:
+        elif self.CurrentSection == FileSections.HitObjects:
             self.ParseHitObject(line)
             
     def ParseHitObject(self, line):
@@ -76,6 +78,8 @@ class BeatmapDecoder():
         
         hitSound = int(tokens[4])
         
+        hitObject = None
+        
         # Build Extras for making Hit Object
         # Extras syntax --> normalSet:additionSet:index:volume:filename
         extrasSplit = tokens[-1].split(':')
@@ -88,5 +92,16 @@ class BeatmapDecoder():
             int(extrasSplit[4 + extraOffset]) if len(extrasSplit) > 4 else 0
         ) if ':' in tokens[-1] else Extras.Extras()
         
-        
+        # Switch on type
+        if type & HitObjectType.Circle.value:
+            if self.Beatmap.GeneralSection.Mode == Ruleset.Standard:
+                hitObject = HitCircle(position, startTime, startTime, hitSound, extras, isNewCombo, comboOffset)
+                print(f"Hit Circle:\n{hitObject}")
+                pass
+            elif self.Beatmap.GeneralSection.Mode == Ruleset.Taiko:
+                print("Taiko not implemented.", file=sys.stderr)
+            elif self.Beatmap.GeneralSection.Mode == Ruleset.Catch:
+                print("Catch not implemented.", file=sys.stderr)
+            elif self.Beatmap.GeneralSection.Mode == Ruleset.Mania:
+                print("Mania not implemented.", file=sys.stderr)
         
