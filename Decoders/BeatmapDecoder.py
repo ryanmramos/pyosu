@@ -58,12 +58,10 @@ class BeatmapDecoder():
             pass
         elif self.CurrentSection == FileSections.Difficulty:
             self.ParseDifficulty(line)
-            pass
         elif self.CurrentSection == FileSections.Events:
             pass
         elif self.CurrentSection == FileSections.TimingPoints:
             self.ParseTimingPoints(line)
-            pass
         elif self.CurrentSection == FileSections.Colours:
             pass
         elif self.CurrentSection == FileSections.HitObjects:
@@ -209,5 +207,7 @@ class BeatmapDecoder():
         elif type & HitObjectType.Hold.value:
             # Mania thing
             pass
+        
+        self.Beatmap.HitObjects.append(hitObject)
                 
         
