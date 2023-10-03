@@ -60,9 +60,7 @@ class BeatmapDecoder():
         elif self.CurrentSection == FileSections.Events:
             pass
         elif self.CurrentSection == FileSections.TimingPoints:
-            # Must be implemented
             self.ParseTimingPoints(line)
-            self
             pass
         elif self.CurrentSection == FileSections.Colours:
             pass
@@ -172,5 +170,7 @@ class BeatmapDecoder():
             
             pixelLength = float(tokens[7])
             
-            # continue here with endTime
+            endTime = ParseHelper.CalculateEndTime(self.Beatmap, startTime, repeats, pixelLength)
+            
+            
         

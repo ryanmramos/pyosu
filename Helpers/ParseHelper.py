@@ -46,6 +46,21 @@ class ParseHelper():
         return sliderPoints
     
     def CalculateEndTime(beatmap, startTime, repeats, pixelLength):
-        # calculate duration here, which needs TimingPoints to be implemented
-        pass
+        duration = int(pixelLength / (100.0 * beatmap.DifficultySection.SliderMultiplier) * repeats * beatmap.BeatLengthAt(startTime))
+        return startTime + duration
+    
+    def CalculateBpmMultiplier(timingPoint):
+        
+        def Clamp(value, min, max):
+            if value > max:
+                return max
+            elif value < min:
+                return min
+            else:
+                return value
+        
+        if timingPoint.BeatLength > 0:
+            return 1.0
+        else:
+            return Clamp(float(-timingPoint.BeatLength), 10, 1000) / 100.0
     
