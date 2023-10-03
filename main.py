@@ -9,7 +9,7 @@ def main():
     filename = fd.askopenfilename(initialdir=os.path.join(OSU_PATH, "Songs"),
                                   filetypes=[("*", ".osu")])
     bm_decoder = BeatmapDecoder()
-    bm_decoder.decode(filename)
+    beatmap = bm_decoder.decode(filename)
     return
 
 if __name__ == "__main__":

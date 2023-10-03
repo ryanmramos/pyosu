@@ -1,6 +1,9 @@
 import os, sys
 from Beatmaps.Beatmap import Beatmap
 from Beatmaps.Objects.HitCircle import HitCircle
+from Beatmaps.Objects.TimingPoint import TimingPoint
+from Enums.Beatmaps.Effects import Effects
+from Enums.Beatmaps.TimeSignature import TimeSignature
 from Enums.FileSections import FileSections
 from Enums.Beatmaps.HitObjectType import HitObjectType
 from Enums.Beatmaps.HitSoundType import HitSoundType
@@ -38,6 +41,8 @@ class BeatmapDecoder():
                 elif ParseHelper.IsLineValid(line, self.CurrentSection):
                     self.ParseLine(line)
                     
+        return self.Beatmap
+                    
     def ParseLine(self, line):
         # pass on a case means that it's not a priority for me as of right now
         # and will be implemented later :)
@@ -55,6 +60,9 @@ class BeatmapDecoder():
         elif self.CurrentSection == FileSections.Events:
             pass
         elif self.CurrentSection == FileSections.TimingPoints:
+            # Must be implemented
+            self.ParseTimingPoints(line)
+            self
             pass
         elif self.CurrentSection == FileSections.Colours:
             pass
@@ -79,7 +87,38 @@ class BeatmapDecoder():
             self.Beatmap.DifficultySection.SliderMultiplier = value
         elif variable == "SliderTickRate":
             self.Beatmap.DifficultySection.SliderTickRate = value
-            
+    
+    def ParseTimingPoints(self, line):
+        # Timing point syntax: time,beatLength,meter,sampleSet,sampleIndex,volume,uninherited,effects
+        tokens = line.split(',')
+        
+        offset = int(tokens[0])
+        beatLength = float(tokens[1])
+        timeSignature = TimeSignature.SimpleQuadruple
+        sampleSet = SampleSet.none
+        customSampleSet = 0
+        volume = 100
+        inherited = True
+        effects = Effects.none
+        
+        if len(tokens) >= 3:
+            timeSignature = TimeSignature(int(tokens[2]))
+        if len(tokens) >= 4:
+            sampleSet = SampleSet(int(tokens[3]))
+        if len(tokens) >= 5:
+            customSampleSet = int(tokens[4])
+        if len(tokens) >= 6:
+            volume = int(tokens[5])
+        if len(tokens) >= 7:
+            inherited = not (int(tokens[6]) > 0)
+        if len(tokens) >= 8:
+            effects = Effects(int(tokens[7]))
+        
+        self.Beatmap.TimingPoints.append(
+            TimingPoint(offset, beatLength, timeSignature, sampleSet,
+                        customSampleSet, volume, inherited, effects)
+        )
+        
     def ParseHitObject(self, line):
         # Hit object syntax: x,y,time,type,hitSound,objectParams,hitSample
         tokens = line.split(',')

@@ -14,3 +14,6 @@ class Beatmap:
         self.EventsSection = EventsSection.EventsSection()
         self.ColorsSection = ColorsSection.ColorsSection()
         
+        self.TimingPoints = []
+        self.HitObjects = []
+        

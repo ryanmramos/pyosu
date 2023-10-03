@@ -45,3 +45,7 @@ class ParseHelper():
             sliderPoints.append([int(positionTokens[0]), int(positionTokens[1])])
         return sliderPoints
     
+    def CalculateEndTime(beatmap, startTime, repeats, pixelLength):
+        # calculate duration here, which needs TimingPoints to be implemented
+        pass
+    
