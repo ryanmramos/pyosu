@@ -33,9 +33,9 @@ class BeatmapDecoder():
         
         for line in f:
             if (line and not line.isspace()) and (not line.startswith("//")):
-                if ParseHelper.GetCurrentSection(None, line) != FileSections.none:
-                    self.CurrentSection = ParseHelper.GetCurrentSection(None, line)
-                elif ParseHelper.IsLineValid(None, line, self.CurrentSection):
+                if ParseHelper.GetCurrentSection(line) != FileSections.none:
+                    self.CurrentSection = ParseHelper.GetCurrentSection(line)
+                elif ParseHelper.IsLineValid(line, self.CurrentSection):
                     self.ParseLine(line)
                     
     def ParseLine(self, line):
@@ -89,14 +89,13 @@ class BeatmapDecoder():
             SampleSet(int(extrasSplit[1 + extraOffset])),
             int(extrasSplit[2 + extraOffset]) if len(extrasSplit) > 2 else 0,
             int(extrasSplit[3 + extraOffset]) if len(extrasSplit) > 3 else 0,
-            int(extrasSplit[4 + extraOffset]) if len(extrasSplit) > 4 else 0
+            extrasSplit[4 + extraOffset] if len(extrasSplit) > 4 else ""
         ) if ':' in tokens[-1] else Extras.Extras()
         
         # Switch on type
         if type & HitObjectType.Circle.value:
             if self.Beatmap.GeneralSection.Mode == Ruleset.Standard:
                 hitObject = HitCircle(position, startTime, startTime, hitSound, extras, isNewCombo, comboOffset)
-                print(f"Hit Circle:\n{hitObject}")
                 pass
             elif self.Beatmap.GeneralSection.Mode == Ruleset.Taiko:
                 print("Taiko not implemented.", file=sys.stderr)
@@ -104,4 +103,15 @@ class BeatmapDecoder():
                 print("Catch not implemented.", file=sys.stderr)
             elif self.Beatmap.GeneralSection.Mode == Ruleset.Mania:
                 print("Mania not implemented.", file=sys.stderr)
+        elif type & HitObjectType.Slider.value:
+            # Slider syntax: x,y,time,type,hitSound,curveType|curvePoints,slides,length,edgeSounds,edgeSets,hitSample
+            curveType = ParseHelper.GetCurveType(tokens[5].split('|')[0][0])
+            
+            sliderPoints = ParseHelper.GetSliderPoints(tokens[5].split('|')[1:])
+            
+            repeats = int(tokens[6])
+            
+            pixelLength = float(tokens[7])
+            
+            # continue here with endTime
         
