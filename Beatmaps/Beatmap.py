@@ -1,6 +1,6 @@
 from Beatmaps.Sections import *
 
-# Beatmap class implementation heavily inspired from https://github.com/mrflashstudio/OsuParsers
+# Beatmap class implementation heavily inspired by https://github.com/mrflashstudio/OsuParsers
 
 class Beatmap:
     LATEST_OSZ_VERSION = 14

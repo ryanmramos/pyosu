@@ -50,6 +50,7 @@ class BeatmapDecoder():
         elif self.CurrentSection == FileSections.Metadata:
             pass
         elif self.CurrentSection == FileSections.Difficulty:
+            self.ParseDifficulty(line)
             pass
         elif self.CurrentSection == FileSections.Events:
             pass
@@ -59,6 +60,25 @@ class BeatmapDecoder():
             pass
         elif self.CurrentSection == FileSections.HitObjects:
             self.ParseHitObject(line)
+            
+    def ParseDifficulty(self, line):
+        diffTokens = line.split(':')
+        variable = diffTokens[0]
+        value = float(diffTokens[1])
+        
+        # Switch on variable
+        if variable == "HPDrainRate":
+            self.Beatmap.DifficultySection.HPDrainRate = value
+        elif variable == "CircleSize":
+            self.Beatmap.DifficultySection.CircleSize = value
+        elif variable == "OverallDifficulty":
+            self.Beatmap.DifficultySection.OverallDifficulty = value
+        elif variable == "ApproachRate":
+            self.Beatmap.DifficultySection.ApproachRate = value
+        elif variable == "SliderMultiplier":
+            self.Beatmap.DifficultySection.SliderMultiplier = value
+        elif variable == "SliderTickRate":
+            self.Beatmap.DifficultySection.SliderTickRate = value
             
     def ParseHitObject(self, line):
         # Hit object syntax: x,y,time,type,hitSound,objectParams,hitSample
