@@ -19,5 +19,5 @@ class Slider(HitObject):
         s += "Slider points:\n"
         for point in self.SliderPoints:
             s += f"<x: {point[0]}, y: {point[1]}>\n"
-        s += "Repeat #: {self.Repeats}\n"
+        s += f"Repeat #: {self.Repeats}\n"
         return s

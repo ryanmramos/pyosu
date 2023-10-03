@@ -1,6 +1,7 @@
 import os, sys
 from Beatmaps.Beatmap import Beatmap
 from Beatmaps.Objects.HitCircle import HitCircle
+from Beatmaps.Objects.Slider import Slider
 from Beatmaps.Objects.TimingPoint import TimingPoint
 from Enums.Beatmaps.Effects import Effects
 from Enums.Beatmaps.TimeSignature import TimeSignature
@@ -133,7 +134,7 @@ class BeatmapDecoder():
         isNewCombo = True if (type & HitObjectType.NewCombo.value) > 0 else False
         type &= ~HitObjectType.NewCombo.value
         
-        hitSound = int(tokens[4])
+        hitSoundValue = int(tokens[4])
         
         hitObject = None
         
@@ -151,9 +152,9 @@ class BeatmapDecoder():
         
         # Switch on type
         if type & HitObjectType.Circle.value:
+            # Check Ruleset
             if self.Beatmap.GeneralSection.Mode == Ruleset.Standard:
-                hitObject = HitCircle(position, startTime, startTime, hitSound, extras, isNewCombo, comboOffset)
-                pass
+                hitObject = HitCircle(position, startTime, startTime, hitSoundValue, extras, isNewCombo, comboOffset)
             elif self.Beatmap.GeneralSection.Mode == Ruleset.Taiko:
                 print("Taiko not implemented.", file=sys.stderr)
             elif self.Beatmap.GeneralSection.Mode == Ruleset.Catch:
@@ -172,5 +173,30 @@ class BeatmapDecoder():
             
             endTime = ParseHelper.CalculateEndTime(self.Beatmap, startTime, repeats, pixelLength)
             
-            
+            edgeHitSounds = None
+            if len(tokens) > 8 and len(tokens[8]) > 0:
+                edgeHitSounds = []
+                for tok in tokens[8].split('|'):
+                    edgeHitSounds.append(HitSoundType(int(tok)))
+                    
+            edgeAdditions = None
+            if len(tokens) > 9 and len(tokens[9]) > 0:
+                edgeAdditions = []
+                for tok in tokens[9].split('|'):
+                    first = int(tok[0])
+                    last = int(tok[1])
+                    edgeAdditions.append(SampleSet(first), SampleSet(last))
+                    
+            # Check Ruleset
+            if self.Beatmap.GeneralSection.Mode == Ruleset.Standard:
+                hitObject = Slider(position, startTime, endTime, hitSoundValue, curveType,
+                                   sliderPoints, repeats, pixelLength, isNewCombo, comboOffset,
+                                   edgeHitSounds, edgeAdditions, extras)
+            elif self.Beatmap.GeneralSection.Mode == Ruleset.Taiko:
+                print("Taiko not implemented.", file=sys.stderr)
+            elif self.Beatmap.GeneralSection.Mode == Ruleset.Catch:
+                print("Catch not implemented.", file=sys.stderr)
+            elif self.Beatmap.GeneralSection.Mode == Ruleset.Mania:
+                print("Mania not implemented.", file=sys.stderr)
+                
         
