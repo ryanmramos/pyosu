@@ -2,6 +2,7 @@ import os, sys
 from Beatmaps.Beatmap import Beatmap
 from Beatmaps.Objects.HitCircle import HitCircle
 from Beatmaps.Objects.Slider import Slider
+from Beatmaps.Objects.Spinner import Spinnder
 from Beatmaps.Objects.TimingPoint import TimingPoint
 from Enums.Beatmaps.Effects import Effects
 from Enums.Beatmaps.TimeSignature import TimeSignature
@@ -198,5 +199,15 @@ class BeatmapDecoder():
                 print("Catch not implemented.", file=sys.stderr)
             elif self.Beatmap.GeneralSection.Mode == Ruleset.Mania:
                 print("Mania not implemented.", file=sys.stderr)
+        elif type & HitObjectType.Spinner.value:
+            # Spinner syntax: x,y,time,type,hitSound,endTime,hitSample
+            endTime = int(tokens[5])
+            
+            if self.Beatmap.GeneralSection.Mode == Ruleset.Standard:
+                hitObject = Spinnder(position, startTime, endTime, hitSoundValue,
+                                     extras, isNewCombo, comboOffset)
+        elif type & HitObjectType.Hold.value:
+            # Mania thing
+            pass
                 
         
