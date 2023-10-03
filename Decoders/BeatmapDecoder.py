@@ -1,9 +1,11 @@
 import os, sys
-from Beatmaps import Beatmap
+from Beatmaps.Beatmap import Beatmap
 from Enums.FileSections import FileSections
 from Enums.Beatmaps.HitObjectType import HitObjectType
 from Enums.Beatmaps.HitSoundType import HitSoundType
+from Enums.Beatmaps.SampleSet import SampleSet
 from Helpers.ParseHelper import ParseHelper
+from Beatmaps.Objects import Extras
 
 class BeatmapDecoder():
     def __init__(self):
@@ -20,11 +22,11 @@ class BeatmapDecoder():
         f = None
         # attempt to open file to read from it
         try:
-            f = open(path, "r")
+            f = open(path, "r", encoding='utf-8')
         except IOError:
             print(f"(-) Error: Could not open file '{path}' as the input file.", file=sys.stderr)
         
-        self.beatmap = Beatmap.Beatmap()
+        self.beatmap = Beatmap()
         self.currentSection = FileSections.Format
         
         for line in f:
@@ -74,7 +76,17 @@ class BeatmapDecoder():
         
         hitSound = int(tokens[4])
         
+        # Build Extras for making Hit Object
+        # Extras syntax --> normalSet:additionSet:index:volume:filename
         extrasSplit = tokens[-1].split(':')
         extraOffset = type & HitObjectType.Hold.value
-        # continue here
+        extras = Extras.Extras(
+            SampleSet(int(extrasSplit[extraOffset])),
+            SampleSet(int(extrasSplit[1 + extraOffset])),
+            int(extrasSplit[2 + extraOffset]) if len(extrasSplit) > 2 else 0,
+            int(extrasSplit[3 + extraOffset]) if len(extrasSplit) > 3 else 0,
+            int(extrasSplit[4 + extraOffset]) if len(extrasSplit) > 4 else 0
+        ) if ':' in tokens[-1] else Extras.Extras()
+        
+        
         
