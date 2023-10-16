@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import IntFlag
 
-class HitSoundType(Enum):
+class HitSoundType(IntFlag):
     none = 0
     Normal = 1 << 0
     Whistle = 1 << 1

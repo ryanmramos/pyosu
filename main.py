@@ -1,4 +1,4 @@
-import os, re
+import os, re, sys
 import config
 from tkinter import filedialog as fd
 from Beatmaps import Beatmap
@@ -13,27 +13,32 @@ api = Ossapi(client_id, client_secret)
 OSU_PATH = os.path.join(os.getenv("LOCALAPPDATA"), "osu!")
 
 def main():
-    # filename = fd.askopenfilename(initialdir=os.path.join(OSU_PATH, "Songs"),
-    #                               filetypes=[("*", ".osu")])
-    # bm_decoder = BeatmapDecoder()
-    # beatmap = bm_decoder.decode(filename)
-    
+    # Have the user choose a replay file
     replay_filename = fd.askopenfilename(initialdir=os.path.join(OSU_PATH, "Replays"),
                                          filetypes=[("*", ".osr")])
     replay = Replay.from_path(replay_filename)
     
+    # Use ossapi to get the hash of the beatmap corresponding to the replay
     bm = api.beatmap(checksum=replay.beatmap_hash)
     
-    bm_file = None
-    dir_regex = re.compile(f'^{bm.beatmapset_id}')
-    file_regex = re.compile(f'.*\[{bm.version}\].*osu$')
+    # Find the beatmap locally
+    bm_decoder = BeatmapDecoder()
+    beatmap = None
+    dir_regex = re.compile(f'^{bm.beatmapset_id}')          # find directory that starts with beatmap ID
+    file_regex = re.compile(f'.*\[{bm.version}\].*osu$')    # check for file that his beatmap version
     for root, dir, files in os.walk(os.path.join(OSU_PATH, "Songs")):
         for d in dir:
             if dir_regex.match(d):
                 for root, dir, files in os.walk(os.path.join(OSU_PATH, "Songs", d)):
                     for file in files:
                         if file_regex.match(file):
-                            print(file)
+                            beatmap = bm_decoder.decode(os.path.join(OSU_PATH, "Songs", d, file))
+                            break
+    
+    # Check if beatmap was found locally
+    if not beatmap:
+        print(f'(-) ERROR: Corresponding file for "{replay_filename[replay_filename.rfind("/") + 1:-1]}" not found locally.', file=sys.stderr)
+        exit(-1)
     
     return
 

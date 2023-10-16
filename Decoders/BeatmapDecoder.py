@@ -2,7 +2,7 @@ import os, sys
 from Beatmaps.Beatmap import Beatmap
 from Beatmaps.Objects.HitCircle import HitCircle
 from Beatmaps.Objects.Slider import Slider
-from Beatmaps.Objects.Spinner import Spinnder
+from Beatmaps.Objects.Spinner import Spinner
 from Beatmaps.Objects.TimingPoint import TimingPoint
 from Enums.Beatmaps.Effects import Effects
 from Enums.Beatmaps.TimeSignature import TimeSignature
@@ -182,9 +182,7 @@ class BeatmapDecoder():
             if len(tokens) > 9 and len(tokens[9]) > 0:
                 edgeAdditions = []
                 for tok in tokens[9].split('|'):
-                    first = int(tok[0])
-                    last = int(tok[1])
-                    edgeAdditions.append(SampleSet(first), SampleSet(last))
+                    edgeAdditions.append([SampleSet(int(tok.split(':')[0])), SampleSet(int(tok.split(':')[-1]))])
                     
             # Check Ruleset
             if self.Beatmap.GeneralSection.Mode == Ruleset.Standard:
@@ -202,7 +200,7 @@ class BeatmapDecoder():
             endTime = int(tokens[5])
             
             if self.Beatmap.GeneralSection.Mode == Ruleset.Standard:
-                hitObject = Spinnder(position, startTime, endTime, hitSoundValue,
+                hitObject = Spinner(position, startTime, endTime, hitSoundValue,
                                      extras, isNewCombo, comboOffset)
         elif type & HitObjectType.Hold.value:
             # Mania thing

@@ -1,4 +1,4 @@
 from Beatmaps.Objects.HitObject import HitObject
 
-class Spinnder(HitObject):
+class Spinner(HitObject):
     pass
