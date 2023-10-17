@@ -3,6 +3,7 @@ import config
 from tkinter import filedialog as fd
 from Beatmaps import Beatmap
 from Decoders.BeatmapDecoder import BeatmapDecoder
+from Replays.Objects.ReplayFrame import ReplayFrame
 from ossapi import Ossapi
 from osrparse import Replay
 
@@ -39,6 +40,17 @@ def main():
     if not beatmap:
         print(f'(-) ERROR: Corresponding file for "{replay_filename[replay_filename.rfind("/") + 1:-1]}" not found locally.', file=sys.stderr)
         exit(-1)
+
+    replay_frames = [0] * len(replay.replay_data)
+    last_time = 0
+    for i, replay_data in enumerate(replay.replay_data):
+        replay_frames[i] = ReplayFrame(replay_data.x, replay_data.y, replay_data.time_delta, last_time + replay_data.time_delta, replay_data.keys)
+        last_time = replay_frames[i].Time
+    
+    print(beatmap.HitObjects[0])
+    for i, replay_frame in enumerate(replay_frames):
+        if replay_frame.Time > 600 and replay_frame.Time < 900:
+            print(replay_frame)
     
     return
 
