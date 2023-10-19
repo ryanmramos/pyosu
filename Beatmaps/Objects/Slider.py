@@ -1,5 +1,6 @@
 from Beatmaps.Objects.Extras import Extras
 from Beatmaps.Objects.HitObject import HitObject
+from globals import *
 
 class Slider(HitObject):
     def __init__(self, position=[0,0], startTime=0, endTime=0, hitSoundValue=0,
@@ -18,6 +19,6 @@ class Slider(HitObject):
         s = super().__str__()
         s += "Slider points:\n"
         for point in self.SliderPoints:
-            s += f"<x: {point[0]}, y: {point[1]}>\n"
+            s += f"<x: {point[X]}, y: {point[Y]}>\n"
         s += f"Repeat #: {self.Repeats}\n"
         return s

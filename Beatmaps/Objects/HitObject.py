@@ -1,4 +1,5 @@
 from Beatmaps.Objects.Extras import Extras
+from globals import *
 
 class HitObject():
     def __init__(self, position=[0,0], startTime=0, endTime=0, hitSoundValue=0,
@@ -12,12 +13,12 @@ class HitObject():
         self.ComboOffset = comboOffset
         
     def __str__(self):
-        s = f"<x: {self.Position[0]}, y: {self.Position[1]}>\n"
+        s = f"<x: {self.Position[X]}, y: {self.Position[Y]}>\n"
         s += f"Start Time: {self.StartTime}\nEnd Time: {self.EndTime}\n"
         return s
         
     def DistanceFrom(self, otherObject):
-        dist = (self.Position[0] - otherObject.Position[0]) ** 2
-        dist += (self.Position[1] - otherObject.Position[1]) ** 2
+        dist = (self.Position[X] - otherObject.Position[X]) ** 2
+        dist += (self.Position[Y] - otherObject.Position[Y]) ** 2
         dist = pow(dist, 0.5)
         return dist

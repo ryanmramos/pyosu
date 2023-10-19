@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import IntFlag
 
-class HitObjectType(Enum):
+class HitObjectType(IntFlag):
     Circle = 1 << 0
     Slider = 1 << 1
     NewCombo = 1 << 2
