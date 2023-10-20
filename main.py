@@ -4,6 +4,8 @@ from tkinter import filedialog as fd
 from Beatmaps import Beatmap
 from Decoders.BeatmapDecoder import BeatmapDecoder
 from Replays.Objects.ReplayFrame import ReplayFrame
+from Helpers.GetNextTap import get_next_tap
+
 from ossapi import Ossapi
 from osrparse import Replay
 
@@ -33,10 +35,12 @@ def main():
     # Create replay frames to work with (includes explicit frame Time, not just time_delta)
     replay_frames = create_replay_frames(replay.replay_data)
     
-    print(beatmap.HitObjects[0])
-    for i, replay_frame in enumerate(replay_frames):
-        if replay_frame.Time > 600 and replay_frame.Time < 900:
-            print(replay_frame)
+    # print(beatmap.HitObjects[0])
+    # for i, replay_frame in enumerate(replay_frames):
+    #     # if replay_frame.Time > 600 and replay_frame.Time < 9000:
+    #     print(replay_frame.Keys)
+
+    get_next_tap(None, None)
     
     return
 
