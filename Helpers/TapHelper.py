@@ -13,6 +13,7 @@ def get_next_tap(keys, idx=0):
     while idx < len(keys) and keys[idx] & (Key.K1 + Key.K2) == 0:
         idx += 1
     
+    # No more taps
     if idx >= len(keys):
         return None
 
@@ -33,7 +34,8 @@ def get_next_tap(keys, idx=0):
     # Get hold frames
     next_start_idx = None
     while idx < len(keys) and keys[idx] & (Key.K1 + Key.K2) > 0:
-        if keys[idx] in possible_transitions:
+        # TODO: I think this condition can be checked more elegantly
+        if not next_start_idx and (keys[idx] in possible_transitions or (idx > 0 and keys[idx] > keys[idx - 1])):
             # No more transitions, one has been found
             possible_transitions = []
             next_start_idx = idx

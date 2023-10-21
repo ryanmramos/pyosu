@@ -1,2 +1,2 @@
 #!/bin/bash
-python Tests/test.py $@
+python test.py $@
