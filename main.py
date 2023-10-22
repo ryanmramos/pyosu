@@ -1,10 +1,10 @@
 import os, re, sys
 import config
 from tkinter import filedialog as fd
-from Beatmaps import Beatmap
 from Decoders.BeatmapDecoder import BeatmapDecoder
 from Replays.Objects.ReplayFrame import ReplayFrame
-from Helpers.TapHelper import get_taps
+from Helpers.TapHelper import get_taps, get_hit_object_taps
+from globals import *
 
 from ossapi import Ossapi
 from osrparse import Replay
@@ -34,19 +34,29 @@ def main():
 
     # Create replay frames to work with (includes explicit frame Time, not just time_delta)
     replay_frames = create_replay_frames(replay.replay_data)
+
+    # Get tap windows from replay frames
+    tap_windows = get_taps(replay_frames)
+
+    # Make a list of frames where each frame is the start of a tap_window
+    tap_starts = [tap_window[0] for tap_window in tap_windows]
+
+    # Get list of lists where first element is hit object and second element is frame where that object was tapped/attempted (if one exists)
+    hit_object_taps = get_hit_object_taps(beatmap.HitObjects, tap_starts, beatmap.DifficultySection)
     
-    # print(beatmap.HitObjects[0])
-    # for i, replay_frame in enumerate(replay_frames):
-    #     # if replay_frame.Time > 600 and replay_frame.Time < 9000:
-    #     print(replay_frame.Keys)
-
-    taps = get_taps(replay_frames)
-
-    for i, tap_window in enumerate(taps):
-        if i > 10:
+    for i, pair in enumerate(hit_object_taps):
+        if i > 300:
             break
-        print(tap_window, '\n')
-    
+        print('HitObject:')
+        print(pair[0])
+        print('Tap Frame:')
+        if not pair[1]:
+            print('MISSED (NO TAP)\n')
+            continue
+        if pair[1].Keys < 0:
+            print('MISSED (TAP)')
+        print(pair[1])
+        print(f'\nTiming: {pair[1].Time - pair[0].StartTime}\n')
     return
 
 def find_local_beatmap(bm_api_response):
