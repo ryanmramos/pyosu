@@ -19,7 +19,7 @@ def get_replay_from_file(file):
     return Replay.from_file(file)
 
 def get_replay_beatmap(replay):
-    return api.beatmap(checksum=replay.beatmap_hash)
+    return find_local_beatmap(api.beatmap(checksum=replay.beatmap_hash))
 
 """
     TODO:
