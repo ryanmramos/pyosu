@@ -98,10 +98,10 @@ def get_hit_object_taps(hit_objects, tap_starts, diff_section):
                 - too late for current HitObject's window
                     move on to the next HitObject
         """
-        if tap_start.Time < curr_hit_obj.StartTime - (200 - 10 * diff_section.OverallDifficulty):
+        while tap_start.Time < curr_hit_obj.StartTime - (200 - 10 * diff_section.OverallDifficulty):
             # Move on to next tap_start
             tap_start_idx += 1
-            pass
+            tap_start = tap_starts[tap_start_idx]
         
         hit_obj_tapped = False
         # Store frame where player potentially missed
