@@ -41,3 +41,32 @@ def find_local_beatmap(bm_api_response):
     
     # If function reaches here, local beatmap was not found
     return None
+
+def get_taps_on_hit_objects(beatmap, replay):
+    # Create replay frames to work with (frames that include explicit Time value, not just time_delta)
+    replay_frames = create_replay_frames(replay.replay_data)
+    
+    # Get tap windows from replay frames
+    tap_windows = get_taps(replay_frames)
+    
+    # Make a list of frames where each frame is the of a tap_window
+    tap_starts = [tap_window[0] for tap_window in tap_windows]
+    
+    # Get list of lists where first element in each inner list is hit object and second element is frame where that
+    # object was tapped/attempted (if on exists)
+    hit_object_taps = get_hit_object_taps(beatmap.HitObjects, tap_starts, beatmap.DifficultySection)
+    
+    return hit_object_taps
+    
+def create_replay_frames(replay_data_list):
+    rf = [0] * len(replay_data_list)
+    last_time = 0
+    for i, replay_data in enumerate(replay_data_list):
+        rf[i] = ReplayFrame(replay_data.x, replay_data.y,
+                            replay_data.time_delta,
+                            last_time + replay_data.time_delta,
+                            replay_data.keys)
+        
+        last_time = rf[i].Time
+    
+    return rf

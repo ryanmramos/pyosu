@@ -41,7 +41,7 @@ def main():
     # Make a list of frames where each frame is the start of a tap_window
     tap_starts = [tap_window[0] for tap_window in tap_windows]
 
-    # Get list of lists where first element is hit object and second element is frame where that object was tapped/attempted (if one exists)
+    # Get list of lists where first element in each inner list is hit object and second element is frame where that object was tapped/attempted (if one exists)
     hit_object_taps = get_hit_object_taps(beatmap.HitObjects, tap_starts, beatmap.DifficultySection)
     
     for i, pair in enumerate(hit_object_taps):
