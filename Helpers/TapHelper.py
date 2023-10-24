@@ -70,6 +70,7 @@ def get_taps(replay_frames):
 
 def get_hit_object_taps(hit_objects, tap_starts, diff_section):
 
+    # WILL NOT CONTAIN SPINNERS
     hit_object_taps = []
 
     hit_obj_idx = 0

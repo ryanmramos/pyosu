@@ -42,21 +42,10 @@ def main():
     tap_starts = [tap_window[0] for tap_window in tap_windows]
 
     # Get list of lists where first element is hit object and second element is frame where that object was tapped/attempted (if one exists)
+    # DOES NOT INCLUDE SPINNERS
     hit_object_taps = get_hit_object_taps(beatmap.HitObjects, tap_starts, beatmap.DifficultySection)
     
-    for i, pair in enumerate(hit_object_taps):
-        if i > 300:
-            break
-        print('HitObject:')
-        print(pair[0])
-        print('Tap Frame:')
-        if not pair[1]:
-            print('MISSED (NO TAP)\n')
-            continue
-        if pair[1].Keys < 0:
-            print('MISSED (TAP)')
-        print(pair[1])
-        print(f'\nTiming: {pair[1].Time - pair[0].StartTime}\n')
+    print(beatmap.MetadataSection)
     return
 
 def find_local_beatmap(bm_api_response):

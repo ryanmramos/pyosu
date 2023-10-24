@@ -55,7 +55,7 @@ class BeatmapDecoder():
         elif self.CurrentSection == FileSections.Editor:
             pass
         elif self.CurrentSection == FileSections.Metadata:
-            pass
+            self.ParseMetadata(line)
         elif self.CurrentSection == FileSections.Difficulty:
             self.ParseDifficulty(line)
         elif self.CurrentSection == FileSections.Events:
@@ -66,6 +66,33 @@ class BeatmapDecoder():
             pass
         elif self.CurrentSection == FileSections.HitObjects:
             self.ParseHitObject(line)
+            
+    def ParseMetadata(self, line):
+        tokens = line.split(':')
+        key = tokens[0]
+        value = tokens[1]
+        
+        # switch on key
+        if key == 'Title':
+            self.Beatmap.MetadataSection.Title = value
+        elif key == 'TitleUnicode':
+            self.Beatmap.MetadataSection.TitleUnicode = value
+        elif key == 'Artist':
+            self.Beatmap.MetadataSection.Artist = value
+        elif key == 'ArtistUnicode':
+            self.Beatmap.MetadataSection.ArtistUnicode = value
+        elif key == 'Creator':
+            self.Beatmap.MetadataSection.Creator = value
+        elif key == 'Version':
+            self.Beatmap.MetadataSection.Version = value
+        elif key == 'Source':
+            self.Beatmap.MetadataSection.Source = value
+        elif key == 'Tags':
+            self.Beatmap.MetadataSection.Tags = [tag for x in value.split(',') for tag in x.split()]
+        elif key == 'BeatmapID':
+            self.Beatmap.MetadataSection.BeatmapID = int(value)
+        elif key == 'BeatmapSetID':
+            self.Beatmap.MetadataSection.BeatmapSetID = int(value)
             
     def ParseDifficulty(self, line):
         diffTokens = line.split(':')
